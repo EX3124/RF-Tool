@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">RF-Tool</string>
+    <string name="step1">Step 1: Grant camera permission</string>
+    <string name="step2">Step 2: Grant floating window permissions</string>
+    <string name="step3">Step 3: Exit, click the floating window\n when identification is required</string>
+    <string name="grant">grant</string>
+    <string name="finish">finish</string>
+    <string name="title">Camera Service</string>
+    <string name="text">Camera is running in the background</string>
+</resources>

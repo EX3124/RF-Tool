@@ -1,0 +1,22 @@
+[versions]
+agp = "8.9.0-alpha03"
+api = "82"
+barcodeScanning = "17.3.0"
+easyfloat = "2.0.3"
+material = "1.12.0"
+cameraCore = "1.4.0"
+cameraLifecycle = "1.4.0"
+cameraCamera2 = "1.4.0"
+
+[libraries]
+api = { module = "de.robv.android.xposed:api", version.ref = "api" }
+barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
+easyfloat = { module = "com.github.princekin-f:EasyFloat", version.ref = "easyfloat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "cameraCore" }
+camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraLifecycle" }
+camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "cameraCamera2" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+

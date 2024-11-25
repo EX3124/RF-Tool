@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RF工具</string>
+    <string name="step1">步骤1: 授予相机权限</string>
+    <string name="step2">步骤2: 授予悬浮窗权限</string>
+    <string name="step3">步骤3: 退出,需要识别时,\n 点击悬浮窗</string>
+    <string name="grant">授权</string>
+    <string name="finish">完成</string>
+    <string name="title">相机服务</string>
+    <string name="text">相机正在后台识别</string>
+</resources>
