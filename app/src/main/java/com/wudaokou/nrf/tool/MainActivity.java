@@ -105,12 +105,10 @@ public class MainActivity extends AppCompatActivity {
                         })
                         .setShowPattern(ShowPattern.ALL_TIME)
                         .show();
-                finish();
+                moveTaskToBack(true);
             }
         });
-
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

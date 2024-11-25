@@ -36,7 +36,7 @@ public class hook implements IXposedHookLoadPackage {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
-                if (param.getResult().equals(122))
+                if (param.getResult().equals(122) || param.getResult().equals(24) || param.getResult().equals(25))
                     Runtime.getRuntime().exec("input keyevent 66");
             }
         });
