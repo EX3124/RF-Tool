@@ -26,12 +26,15 @@ import com.lzf.easyfloat.interfaces.OnPermissionResult;
 import com.lzf.easyfloat.permission.PermissionUtils;
 
 public class MainActivity extends AppCompatActivity {
+    public static MainActivity instance;
     Activity activity;
     Context context;
-    public static MainActivity instance;
-    ImageView imageView;
+    ImageView scan;
+    ImageButton flashlight;
     Drawable drawable;
     Drawable drawable1;
+    Drawable drawable2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,13 +50,25 @@ public class MainActivity extends AppCompatActivity {
         Button button1 = findViewById(R.id.button1);
         Button button2 = findViewById(R.id.button2);
         ImageButton imageButton = findViewById(R.id.github);
+        flashlight = findViewById(R.id.flashlight);
         drawable = AppCompatResources.getDrawable(context, R.drawable.scan);
         drawable1 = AppCompatResources.getDrawable(context, R.drawable.scanning);
+        drawable2 = AppCompatResources.getDrawable(context, R.drawable.flashlight);
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://www.github.com/EX3124/RF-Tool")));
+            }
+        });
+        flashlight.setImageDrawable(drawable2);
+        flashlight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (flashlight.getDrawable() == drawable2)
+                    flashlight.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.flashlight_on));
+                else
+                    flashlight.setImageDrawable(drawable2);
             }
         });
 
@@ -90,12 +105,12 @@ public class MainActivity extends AppCompatActivity {
                         .setLayout(R.layout.float_window, new OnInvokeView() {
                             @Override
                             public void invoke(View view) {
-                                imageView = view.findViewById(R.id.float_show);
-                                imageView.setBackground(drawable);
-                                imageView.setOnClickListener(new View.OnClickListener() {
+                                scan = view.findViewById(R.id.float_show);
+                                scan.setBackground(drawable);
+                                scan.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if (imageView.getBackground() == drawable)
+                                        if (scan.getBackground() == drawable)
                                             startService(new Intent(context, CameraService.class));
                                         else
                                             stopService(new Intent(context, CameraService.class));

@@ -12,6 +12,7 @@ import android.os.IBinder;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
+import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageAnalysis;
@@ -54,7 +55,7 @@ public class CameraService extends Service implements LifecycleOwner {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MainActivity.instance.imageView.setBackground(MainActivity.instance.drawable1);
+        MainActivity.instance.scan.setBackground(MainActivity.instance.drawable1);
         Notification notification = new NotificationCompat.Builder(this, "0")
                 .setContentTitle(getString(R.string.title))
                 .setContentText(getString(R.string.text))
@@ -111,7 +112,9 @@ public class CameraService extends Service implements LifecycleOwner {
                     }
                 });
                 cameraProvider.unbindAll();
-                cameraProvider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageAnalysis);
+                Camera camera = cameraProvider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageAnalysis);
+                if (MainActivity.instance.flashlight.getDrawable() != MainActivity.instance.drawable2)
+                    camera.getCameraControl().enableTorch(true);
             } catch (Exception ignore) {
                 stopSelf();
             }
@@ -128,7 +131,7 @@ public class CameraService extends Service implements LifecycleOwner {
     public void onDestroy() {
         super.onDestroy();
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);
-        MainActivity.instance.imageView.setBackground(MainActivity.instance.drawable);
+        MainActivity.instance.scan.setBackground(MainActivity.instance.drawable);
 
     }
 }
