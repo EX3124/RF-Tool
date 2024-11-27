@@ -1,13 +1,11 @@
 package com.wudaokou.nrf.tool;
 
-import androidx.annotation.Keep;
-
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
-@Keep
+@androidx.annotation.Keep
 public class hook implements IXposedHookLoadPackage {
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) {
@@ -36,8 +34,16 @@ public class hook implements IXposedHookLoadPackage {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 super.afterHookedMethod(param);
-                if (param.getResult().equals(122) || param.getResult().equals(24) || param.getResult().equals(25))
-                    Runtime.getRuntime().exec("input keyevent 66");
+                int eventID = (int) XposedHelpers.callMethod(param.thisObject, "getAction");
+                if (eventID == android.view.KeyEvent.ACTION_DOWN) {
+                    if (param.getResult().equals(122) || param.getResult().equals(24) || param.getResult().equals(25)) {
+                        Object LastEnterTime = XposedHelpers.getAdditionalInstanceField(param.thisObject, "LastEnterTime");
+                        if (LastEnterTime == null || System.currentTimeMillis() - (Long) LastEnterTime > 220) {
+                            XposedHelpers.setAdditionalInstanceField(param.thisObject, "LastEnterTime", System.currentTimeMillis());
+                            Runtime.getRuntime().exec("input keyevent 66");
+                        }
+                    }
+                }
             }
         });
     }

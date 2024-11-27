@@ -91,9 +91,11 @@ public class CameraService extends Service implements LifecycleOwner {
                                 .addOnSuccessListener(barcodes -> {
                                     for (Barcode barcode : barcodes) {
                                         String CodeResult = barcode.getRawValue();
+                                        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);
                                         try {
                                             Process process = Runtime.getRuntime().exec("su");
                                             DataOutputStream os = new DataOutputStream(process.getOutputStream());
+                                            os.flush();
                                             os.writeBytes("input text '" + CodeResult + "'\n");
                                             os.flush();
                                             os.writeBytes("input keyevent 66\n");
@@ -104,6 +106,7 @@ public class CameraService extends Service implements LifecycleOwner {
                                             if (process.exitValue() != 0)
                                                 ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("0", CodeResult));
                                         } catch (Throwable ignore) {
+                                            ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("0", CodeResult));
                                         }
                                         stopSelf();
                                     }

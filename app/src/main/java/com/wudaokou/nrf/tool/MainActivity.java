@@ -91,38 +91,44 @@ public class MainActivity extends AppCompatActivity {
                     public void permissionResult(boolean b) {
                         findViewById(R.id.button1).setEnabled(false);
                         findViewById(R.id.button2).setEnabled(true);
+                        showFloatWindow();
                     }
                 });
             }
         });
 
-        if (ContextCompat.checkSelfPermission(context, "android.permission.CAMERA") == PackageManager.PERMISSION_GRANTED && PermissionUtils.checkPermission(context))
+        if (ContextCompat.checkSelfPermission(context, "android.permission.CAMERA") == PackageManager.PERMISSION_GRANTED && PermissionUtils.checkPermission(context)) {
             button2.setEnabled(true);
+            showFloatWindow();
+        }
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EasyFloat.with(activity)
-                        .setLayout(R.layout.float_window, new OnInvokeView() {
-                            @Override
-                            public void invoke(View view) {
-                                scan = view.findViewById(R.id.float_show);
-                                scan.setBackground(drawable);
-                                scan.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (scan.getBackground() == drawable)
-                                            startService(new Intent(context, CameraService.class));
-                                        else
-                                            stopService(new Intent(context, CameraService.class));
-                                    }
-                                });
-                            }
-                        })
-                        .setShowPattern(ShowPattern.ALL_TIME)
-                        .show();
                 moveTaskToBack(true);
             }
         });
+    }
+
+    public void showFloatWindow() {
+        EasyFloat.with(activity)
+            .setLayout(R.layout.float_window, new OnInvokeView() {
+                    @Override
+                    public void invoke(View view) {
+                        scan = view.findViewById(R.id.float_show);
+                        scan.setBackground(drawable);
+                        scan.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (scan.getBackground() == drawable)
+                                    startService(new Intent(context, CameraService.class));
+                                else
+                                    stopService(new Intent(context, CameraService.class));
+                            }
+                        });
+                    }
+                })
+            .setShowPattern(ShowPattern.ALL_TIME)
+            .show();
     }
 
     @Override
@@ -131,9 +137,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 0) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 findViewById(R.id.button).setEnabled(false);
-                if (PermissionUtils.checkPermission(context))
+                if (PermissionUtils.checkPermission(context)) {
                     findViewById(R.id.button2).setEnabled(true);
-                else
+                    showFloatWindow();
+                } else
                     findViewById(R.id.button1).setEnabled(true);
             }
         }
