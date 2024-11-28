@@ -36,9 +36,9 @@ public class hook implements IXposedHookLoadPackage {
                 super.afterHookedMethod(param);
                 int eventID = (int) XposedHelpers.callMethod(param.thisObject, "getAction");
                 if (eventID == android.view.KeyEvent.ACTION_DOWN) {
-                    if (param.getResult().equals(122) || param.getResult().equals(24) || param.getResult().equals(25)) {
+                    if (param.getResult().equals(android.view.KeyEvent.KEYCODE_MOVE_HOME) || param.getResult().equals(android.view.KeyEvent.KEYCODE_VOLUME_UP) || param.getResult().equals(android.view.KeyEvent.KEYCODE_VOLUME_DOWN)) {
                         Object LastEnterTime = XposedHelpers.getAdditionalInstanceField(param.thisObject, "LastEnterTime");
-                        if (LastEnterTime == null || System.currentTimeMillis() - (Long) LastEnterTime > 220) {
+                        if (LastEnterTime == null || System.currentTimeMillis() - (Long) LastEnterTime > 500) {
                             XposedHelpers.setAdditionalInstanceField(param.thisObject, "LastEnterTime", System.currentTimeMillis());
                             Runtime.getRuntime().exec("input keyevent 66");
                         }
