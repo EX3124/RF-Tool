@@ -14,7 +14,6 @@ import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
-import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -70,7 +69,6 @@ public class CameraService extends Service implements LifecycleOwner {
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                Preview preview = new Preview.Builder().build();
 
                 ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
@@ -96,9 +94,19 @@ public class CameraService extends Service implements LifecycleOwner {
                     }
                 });
                 cameraProvider.unbindAll();
-                Camera camera = cameraProvider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageAnalysis);
-                if (MainActivity.instance.flashlight.getDrawable() != MainActivity.instance.drawable2)
-                    camera.getCameraControl().enableTorch(true);
+                Camera camera = cameraProvider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, imageAnalysis);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (MainActivity.instance.scan.getBackground() == MainActivity.instance.drawable1) {
+                            camera.getCameraControl().enableTorch(MainActivity.instance.flashlight);
+                            try {
+                                Thread.sleep(50);
+                            } catch (Exception ignore) {
+                            }
+                        }
+                    }
+                }).start();
             } catch (Exception ignore) {
                 stopSelf();
             }

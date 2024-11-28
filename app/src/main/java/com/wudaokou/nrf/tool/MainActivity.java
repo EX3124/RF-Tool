@@ -30,10 +30,9 @@ public class MainActivity extends AppCompatActivity {
     Activity activity;
     Context context;
     ImageView scan;
-    ImageButton flashlight;
     Drawable drawable;
     Drawable drawable1;
-    Drawable drawable2;
+    Boolean flashlight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         activity = this;
         context = this;
         instance = this;
+        flashlight = false;
 
         EdgeToEdge.enable(this);
 
@@ -50,25 +50,13 @@ public class MainActivity extends AppCompatActivity {
         Button button1 = findViewById(R.id.button1);
         Button button2 = findViewById(R.id.button2);
         ImageButton imageButton = findViewById(R.id.github);
-        flashlight = findViewById(R.id.flashlight);
         drawable = AppCompatResources.getDrawable(context, R.drawable.scan);
         drawable1 = AppCompatResources.getDrawable(context, R.drawable.scanning);
-        drawable2 = AppCompatResources.getDrawable(context, R.drawable.flashlight);
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://www.github.com/EX3124/RF-Tool")));
-            }
-        });
-        flashlight.setImageDrawable(drawable2);
-        flashlight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (flashlight.getDrawable() == drawable2)
-                    flashlight.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.flashlight_on));
-                else
-                    flashlight.setImageDrawable(drawable2);
             }
         });
 
@@ -125,6 +113,13 @@ public class MainActivity extends AppCompatActivity {
                                     startService(new Intent(context, CameraService.class));
                                 else
                                     stopService(new Intent(context, CameraService.class));
+                            }
+                        });
+                        scan.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                flashlight = !flashlight;
+                                return true;
                             }
                         });
                     }
