@@ -4,9 +4,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
@@ -31,7 +28,6 @@ import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 
-import java.io.DataOutputStream;
 import java.util.Objects;
 
 
@@ -92,22 +88,7 @@ public class CameraService extends Service implements LifecycleOwner {
                                     for (Barcode barcode : barcodes) {
                                         String CodeResult = barcode.getRawValue();
                                         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);
-                                        try {
-                                            Process process = Runtime.getRuntime().exec("su");
-                                            DataOutputStream os = new DataOutputStream(process.getOutputStream());
-                                            os.flush();
-                                            os.writeBytes("input text '" + CodeResult + "'\n");
-                                            os.flush();
-                                            os.writeBytes("input keyevent 66\n");
-                                            os.flush();
-                                            os.writeBytes("exit\n");
-                                            os.flush();
-                                            process.waitFor();
-                                            if (process.exitValue() != 0)
-                                                ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("0", CodeResult));
-                                        } catch (Throwable ignore) {
-                                            ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE)).setPrimaryClip(ClipData.newPlainText("0", CodeResult));
-                                        }
+                                        sendBroadcast(new Intent().setAction("android.intent.action.SCANRESULT").putExtra("value", CodeResult));
                                         stopSelf();
                                     }
                                     image.close();

@@ -89,9 +89,11 @@ public class MainActivity extends AppCompatActivity {
                 PermissionUtils.requestPermission(activity, new OnPermissionResult() {
                     @Override
                     public void permissionResult(boolean b) {
-                        findViewById(R.id.button1).setEnabled(false);
-                        findViewById(R.id.button2).setEnabled(true);
-                        showFloatWindow();
+                        if (b) {
+                            findViewById(R.id.button1).setEnabled(false);
+                            findViewById(R.id.button2).setEnabled(true);
+                            showFloatWindow();
+                        }
                     }
                 });
             }
